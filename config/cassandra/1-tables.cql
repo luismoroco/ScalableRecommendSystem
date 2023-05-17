@@ -1,0 +1,2 @@
+USE devTest;
+CREATE TABLE IF NOT EXISTS months (id INT PRIMARY KEY, name TEXT);
