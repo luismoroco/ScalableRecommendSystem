@@ -4,9 +4,11 @@ mkdir data
 var=$1
 
 # venv
-virtualenv -p /usr/bin/python3 venv 
-source venv/bin/activate
-pip3 install -r requeriments.txt
+create_env() {
+  virtualenv -p /usr/bin/python3 venv 
+  source venv/bin/activate
+  pip3 install -r requeriments.txt
+}
 
 # data
 if [ -z "$var" ]; then
@@ -20,6 +22,7 @@ else
     rm ml-latest-small.zip
     cd .. 
     echo "Small Data Generated in ./data!"
+    create_env
   elif [ "$var" = "f" ]; then
     cd data
     echo "Configuring FLL dataset"
@@ -30,8 +33,6 @@ else
     echo "Full Data Generated in ./data!"
   else
     echo "The var is not a option!"
+    create_env
   fi 
 fi
-
-# setup dev 
-sudo make setup
