@@ -3,6 +3,12 @@
 mkdir data
 var=$1
 
+# venv
+virtualenv -p /usr/bin/python3 venv 
+source venv/bin/activate
+pip3 install -r requeriments.txt
+
+# data
 if [ -z "$var" ]; then
   echo "A option is needed!"
 else
@@ -26,3 +32,6 @@ else
     echo "The var is not a option!"
   fi 
 fi
+
+# setup dev 
+sudo make setup
