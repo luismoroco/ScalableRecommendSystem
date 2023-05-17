@@ -5,6 +5,7 @@ var=$1
 
 # venv
 create_env() {
+  echo "Initializing virtual enviorement VENV"
   virtualenv -p /usr/bin/python3 venv 
   source venv/bin/activate
   pip3 install -r requeriments.txt
