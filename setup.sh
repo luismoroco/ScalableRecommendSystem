@@ -32,8 +32,8 @@ else
     rm ml-latest.zip
     cd .. 
     echo "Full Data Generated in ./data!"
+    create_env
   else
     echo "The var is not a option!"
-    create_env
   fi 
 fi
