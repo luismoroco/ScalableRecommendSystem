@@ -4,7 +4,11 @@ update:
 
 .PHONY: setup 
 setup:
-	sudo docker-compose up 
+	sudo docker-compose up
+
+.PHONY: preprocess
+preprocess:
+	python3 config/preprocess/preprocess.py
 
 .PHONY: down 
 down:
