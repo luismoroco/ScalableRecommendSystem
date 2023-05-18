@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS genres (
   name TEXT
 );
 
-CREATE TABLE IF NOT EXIST movies (
+CREATE TABLE IF NOT EXISTS movies (
   id INT PRIMARY KEY,
   title TEXT,
   genres_ids SET<INT>

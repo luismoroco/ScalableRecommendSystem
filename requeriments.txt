@@ -3,3 +3,5 @@ numpy
 pyspark
 cassandra-driver
 pandas
+findspark
+python-dotenv
