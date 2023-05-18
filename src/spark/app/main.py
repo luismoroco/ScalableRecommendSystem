@@ -9,18 +9,22 @@ spark = SparkSession.builder \
     .master("spark://spark-master:7077") \
     .getOrCreate()
 
-# Crea un RDD distribuido con el vector de números
-vector_size = 1000000
-vector_rdd = spark.sparkContext.parallelize(range(vector_size), numSlices=2)
+matrix1 = [[1, 2, 3],
+           [4, 5, 6],
+           [7, 8, 9]]
 
-# Convierte el RDD en un DataFrame
-df = spark.createDataFrame(vector_rdd.map(lambda x: (Vectors.dense(x),)), ["features"])
+matrix2 = [[9, 8, 7],
+           [6, 5, 4],
+           [3, 2, 1]]
 
-# Realiza la suma de los vectores distribuidos
-result = df.select(df.features).rdd.reduce(lambda x, y: (x[0] + y[0],))
+rdd1 = spark.sparkContext.parallelize(matrix1)
+rdd2 = spark.sparkContext.parallelize(matrix2)
 
-# Imprime el resultado de la suma
-print("Resultado de la suma:", result[0])
+result_rdd = rdd1.zip(rdd2).map(lambda x: [sum(pair) for pair in zip(x[0], x[1])])
+
+result = result_rdd.collect()
+
+print(result)
 
 # Detiene la sesión de Spark
 spark.stop()
