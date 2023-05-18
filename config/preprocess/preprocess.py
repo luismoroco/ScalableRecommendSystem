@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from lib import exportFile
+from lib import exportFile, exportSpark
 import gc
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ movies_csv_path = os.path.join(script_dir, '..', '..', 'data', 'ml-latest', 'mov
 ratings_csv_path = os.path.join(script_dir, '..', '..', 'data', 'ml-latest', 'ratings.csv')
 
 movies_df = pd.read_csv(movies_csv_path, usecols=['movieId', 'title', 'genres'])
-rating_df = pd.read_csv(ratings_csv_path, usecols=['movieId'])
+rating_df = pd.read_csv(ratings_csv_path)
 
 movies_df.drop_duplicates(inplace=True)
 
@@ -32,7 +32,7 @@ exportFile(movies_cleaned, 'movies_cleaned')
 print('CLEANED_MOVIES EXPORTED!')
 
 # DATA STORAGE 
-
+"""
 print("SAVING ... MOVIES INTO CASSANDRA")
 
 genre_dict = {
@@ -75,6 +75,12 @@ for index, row in movies_cleaned.iterrows():
 
 session.shutdown()
 
-print("DATA SAVED IN CASSANDRAA CLUSTER!")
+print("DATA SAVED IN CASSANDRAA CLUSTER!")"""
+
+# RATING
+
+rating_df.drop('timestamp', axis=1, inplace=True)
+
+exportSpark(rating_df, 'ratings')
 
 gc.collect()
