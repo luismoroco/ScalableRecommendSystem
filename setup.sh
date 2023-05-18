@@ -37,3 +37,7 @@ else
     echo "The var is not a option!"
   fi 
 fi
+
+# docker spark 
+
+sudo docker build -f src/spark/Dockerfile -t spark:venv .
