@@ -1,24 +1,20 @@
-insert into devTest.months ( id, name )
-VALUES( 1, 'January' );
-insert into devTest.months ( id, name )
-VALUES( 2, 'February' );
-insert into devTest.months ( id, name )
-VALUES( 3, 'March' );
-insert into devTest.months ( id, name )
-VALUES( 4, 'April' );
-insert into devTest.months ( id, name )
-VALUES( 5, 'May' );
-insert into devTest.months ( id, name )
-VALUES( 6, 'June' );
-insert into devTest.months ( id, name )
-VALUES( 7, 'July' );
-insert into devTest.months ( id, name )
-VALUES( 8, 'August' );
-insert into devTest.months ( id, name )
-VALUES( 9, 'September' );
-insert into devTest.months ( id, name )
-VALUES( 10, 'October' );
-insert into devTest.months ( id, name )
-VALUES( 11, 'November' );
-insert into devTest.months ( id, name )
-VALUES( 12, 'December' );
+INSERT INTO devTest.genres (id, name) VALUES (1, 'Documentary');
+INSERT INTO devTest.genres (id, name) VALUES (2, 'Adventure');
+INSERT INTO devTest.genres (id, name) VALUES (3, 'Sci-Fi');
+INSERT INTO devTest.genres (id, name) VALUES (4, 'Children');
+INSERT INTO devTest.genres (id, name) VALUES (5, 'IMAX');
+INSERT INTO devTest.genres (id, name) VALUES (6, 'Mystery');
+INSERT INTO devTest.genres (id, name) VALUES (7, 'Animation');
+INSERT INTO devTest.genres (id, name) VALUES (8, 'War');
+INSERT INTO devTest.genres (id, name) VALUES (9, 'Drama');
+INSERT INTO devTest.genres (id, name) VALUES (10, 'Romance');
+INSERT INTO devTest.genres (id, name) VALUES (11, 'Crime');
+INSERT INTO devTest.genres (id, name) VALUES (12, 'Action');
+INSERT INTO devTest.genres (id, name) VALUES (13, 'Musical');
+INSERT INTO devTest.genres (id, name) VALUES (14, 'Fantasy');
+INSERT INTO devTest.genres (id, name) VALUES (15, 'Horror');
+INSERT INTO devTest.genres (id, name) VALUES (16, 'Film-Noir');
+INSERT INTO devTest.genres (id, name) VALUES (17, 'Comedy');
+INSERT INTO devTest.genres (id, name) VALUES (18, '(no genres listed)');
+INSERT INTO devTest.genres (id, name) VALUES (19, 'Thriller');
+INSERT INTO devTest.genres (id, name) VALUES (20, 'Western');
