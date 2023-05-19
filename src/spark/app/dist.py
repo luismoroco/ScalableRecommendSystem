@@ -25,6 +25,9 @@ matrix = CoordinateMatrix(coordinates)"""
 train, test = df.randomSplit([0.8, 0.2])
 
 recommerder = ALS(userCol='userId', ratingCol='rating', itemCol='movieId')
-recommerder.fit(train)
+model = recommerder.fit(train)
+
+preds = model.transform(test)
+preds.show()
 
 spark.stop()
