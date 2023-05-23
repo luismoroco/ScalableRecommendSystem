@@ -8,5 +8,21 @@ CREATE TABLE IF NOT EXISTS genres (
 CREATE TABLE IF NOT EXISTS movies (
   id INT PRIMARY KEY,
   title TEXT,
+  count_rat INT,
+  tmdbId TEXT,
+  rat_avg FLOAT,
   genres_ids SET<INT>
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY,
+  count_rat INT, 
+  mov_rateds SET<INT> 
+);
+
+CREATE TABLE IF NOT EXISTS ratings (
+  id INT PRIMARY KEY,
+  id_user INT,
+  id_movie INT,
+  rating FLOAT
 );

@@ -1,17 +1,17 @@
 version: '3'
 
 services:
-  #web:
-  #  build:
-  #    context: src/app/
-  #    dockerfile: Dockerfile
-  #  env_file: .env
-  #  container_name: ${F_NAME}
-  #  ports:
-  #    - '${F_EXP_PORT}:${F_HID_PORT}' 
+  web:
+    build:
+      context: src/app/
+      dockerfile: Dockerfile
+    env_file: .env
+    container_name: ${F_NAME}
+    ports:
+      - '${F_EXP_PORT}:${F_HID_PORT}' 
 
   spark:
-    image: docker.io/bitnami/spark:3.3
+    image: docker.io/spark:venv
     env_file: .env
     container_name: spark-master
     environment:
@@ -28,7 +28,7 @@ services:
       - './src/spark/data:/opt/bitnami/spark/data'
   
   spark-worker-1:
-    image: docker.io/bitnami/spark:3.3
+    image: docker.io/spark:venv
     env_file: .env
     container_name: spark-worker-1
     environment:
@@ -40,9 +40,12 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
+    volumes:
+      - './src/spark/app:/opt/bitnami/spark/app'
+      - './src/spark/data:/opt/bitnami/spark/data'
 
   spark-worker-2:
-    image: docker.io/bitnami/spark:3.3
+    image: docker.io/spark:venv
     env_file: .env
     container_name: spark-worker-2
     environment:
@@ -54,20 +57,23 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no 
+    volumes:
+      - './src/spark/app:/opt/bitnami/spark/app'
+      - './src/spark/data:/opt/bitnami/spark/data'
 
-  #cassandra-node1:
-    #image: docker.io/bitnami/cassandra:latest
-    #env_file: .env
-    #container_name: db-node1
-    #volumes:
-    #  - ./config/cassandra:/docker-entrypoint-initdb.d
-    #environment:
-    #  - CASSANDRA_CLUSTER_NAME=${C_CLUSTER_NAME}
-    #  - CASSANDRA_SEEDS=db-node1
-    #  - CASSANDRA_PASSWORD_SEEDER=yes
-    #  - CASSANDRA_PASSWORD=${C_CLUSTER_PASS}
-    #  - CASSANDRA_DATACENTER=${C_DATACENTER_NAME}
-    #  - CASSANDRA_AUTH_ENABLED=no
-    #ports:
-    #  - '${C_NODE1_EXP_PORT}:9042'
-    #  - 7000:7000
+  cassandra-node1:
+    image: docker.io/bitnami/cassandra:latest
+    env_file: .env
+    container_name: db-node1
+    volumes:
+      - ./config/cassandra:/docker-entrypoint-initdb.d
+    environment:
+      - CASSANDRA_CLUSTER_NAME=${C_CLUSTER_NAME}
+      - CASSANDRA_SEEDS=db-node1
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=${C_CLUSTER_PASS}
+      - CASSANDRA_DATACENTER=${C_DATACENTER_NAME}
+      - CASSANDRA_AUTH_ENABLED=no
+    ports:
+      - '${C_NODE1_EXP_PORT}:9042'
+      - 7000:7000

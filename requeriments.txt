@@ -5,3 +5,4 @@ cassandra-driver
 pandas
 findspark
 python-dotenv
+scikit-learn
