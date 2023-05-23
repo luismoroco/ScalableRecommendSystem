@@ -6,3 +6,5 @@ pandas
 findspark
 python-dotenv
 scikit-learn
+seaborn
+matplotlib
