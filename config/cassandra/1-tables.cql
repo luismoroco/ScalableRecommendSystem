@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS movies (
 CREATE TABLE IF NOT EXISTS users (
   id INT PRIMARY KEY,
   count_rat INT, 
+  avg_rat FLOAT,  
   mov_rateds SET<INT> 
 );
 

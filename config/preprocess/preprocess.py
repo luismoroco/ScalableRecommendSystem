@@ -1,86 +1,88 @@
 import pandas as pd
 import os
-from lib import exportFile, exportSpark
+from lib import exportFile
 import gc
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# MOVIES CLEANING
+from sklearn.preprocessing import StandardScaler
+scalerEngine = StandardScaler()
+
+"""
+    -------------------- DATA CLEANING ----------------------
+"""
+
 print("Cleaning ... MOVIES")
 
+"""
+    GETTING PATHS AND READ CSV
+"""
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
+
 movies_csv_path = os.path.join(script_dir, '..', '..', 'data', 'ml-latest', 'movies.csv')
 ratings_csv_path = os.path.join(script_dir, '..', '..', 'data', 'ml-latest', 'ratings.csv')
+links_csv_path = os.path.join(script_dir, '..', '..', 'data', 'ml-latest', 'links.csv')
 
 movies_df = pd.read_csv(movies_csv_path, usecols=['movieId', 'title', 'genres'])
-rating_df = pd.read_csv(ratings_csv_path)
+rating_df = pd.read_csv(ratings_csv_path, usecols=['userId', 'movieId', 'rating'])
+links_df = pd.read_csv(links_csv_path, usecols=['movieId', 'tmdbId'], dtype={'tmdbId': str})
+
+
+"""
+    STANDARIZING DATA ['RATING]
+"""
+# FOR MOVIES 
+
+rating_df['rating'] = scalerEngine.fit_transform(rating_df[['rating']])
+gc.collect()
+
+
+"""
+    DROP DUPLICATES, DROP MOVIES WITHOUR RATINGS, AVG PER MOVIE AND COUNTING
+"""
 
 movies_df.drop_duplicates(inplace=True)
 
+# movie without ratings
 movies_without_ratings = movies_df[~movies_df['movieId'].isin(rating_df['movieId'])]
 movies_without_ratings_rows = movies_without_ratings[['movieId', 'title']]
-
 print('MOVIES WITHOUT RATINGS:', movies_without_ratings_rows.shape)
 
+# filtering
 movies_cleaned = movies_df[~movies_df['movieId'].isin(movies_without_ratings_rows['movieId'])]
 
-print('CLEANED MOVIES CSV:', movies_df.shape, '->' ,movies_cleaned.shape)
+# avg per movie
+rating_avg = rating_df.groupby('movieId')['rating'].mean().reset_index(name='rating_avg')
 
+# counting
+rating_count = rating_df.groupby('movieId').size().reset_index(name='rating_count')
+
+# merge (count, mov, avg)
+movies_cleaned = pd.merge(movies_cleaned, rating_count, on='movieId', how='left')
+movies_cleaned = pd.merge(movies_cleaned, rating_avg, on='movieId', how='left')
+movies_cleaned = pd.merge(movies_cleaned, links_df, on='movieId')
+print('CLEANED MOVIES CSV:', movies_df.shape, '->', movies_cleaned.shape)
+
+# export file
 exportFile(movies_cleaned, 'movies_cleaned')
-
 print('CLEANED_MOVIES EXPORTED!')
+gc.collect()
 
-# DATA STORAGE 
-"""
-print("SAVING ... MOVIES INTO CASSANDRA")
 
-genre_dict = {
-    'Documentary': 1,
-    'Adventure': 2,
-    'Sci-Fi': 3,
-    'Children': 4,
-    'IMAX': 5,
-    'Mystery': 6,
-    'Animation': 7,
-    'War': 8,
-    'Drama': 9,
-    'Romance': 10,
-    'Crime': 11,
-    'Action': 12,
-    'Musical': 13,
-    'Fantasy': 14,
-    'Horror': 15,
-    'Film-Noir': 16,
-    'Comedy': 17,
-    '(no genres listed)': 18,
-    'Thriller': 19,
-    'Western': 20
-    }
+# FOR USERS AND RATINGS 
 
-from cassandra.cluster import Cluster
-from cassandra.auth import PlainTextAuthProvider
+count_rat = rating_df.groupby('userId').size().reset_index(name='count_rat')
 
-cluster = Cluster(
-    port=int(os.environ['C_NODE1_EXP_PORT']), 
-    auth_provider=PlainTextAuthProvider(username=str(os.environ['C_USERNAME']), password=str(os.environ['C_CLUSTER_PASS'])))
+# avg per user
+avg_rat = rating_df.groupby('userId')['rating'].mean().reset_index(name='avg_rat')
 
-session = cluster.connect()
+# generating list of movies rated
+moviesIds = rating_df.groupby('userId')['movieId'].apply(lambda x: ' '.join(x.astype(str))).reset_index(name='moviesIds')
 
-session.set_keyspace(str(os.environ['C_DB_NAME']))
-
-for index, row in movies_cleaned.iterrows():
-    idg = {genre_dict.get(gen) for gen in row['genres'].split('|')}
-    session.execute("INSERT INTO movies (id, title, genres_ids) VALUES (%s, %s, %s)", (row['movieId'], row['title'], idg))
-
-session.shutdown()
-
-print("DATA SAVED IN CASSANDRAA CLUSTER!")"""
-
-# RATING
-
-rating_df.drop('timestamp', axis=1, inplace=True)
-
-exportSpark(rating_df, 'ratings')
-
+# merge
+users_ratings = count_rat.merge(avg_rat, on='userId').merge(moviesIds, on='userId')
+exportFile(users_ratings, 'users_ratings')
+print('USERS_RATING EXPORTED!')
 gc.collect()
