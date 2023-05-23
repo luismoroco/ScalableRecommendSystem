@@ -7,6 +7,7 @@ services:
     container_name: db-node1
     volumes:
       - ./config/cassandra:/docker-entrypoint-initdb.d
+      - ./tmp:/bitnami/cassandra
     environment:
       - CASSANDRA_CLUSTER_NAME=${C_CLUSTER_NAME}
       - CASSANDRA_SEEDS=db-node1

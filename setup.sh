@@ -41,3 +41,8 @@ fi
 # docker spark 
 
 sudo docker build -f src/spark/Dockerfile -t spark:venv .
+
+# tmp 
+
+mkdir tmp
+chmod 777 ./tmp
