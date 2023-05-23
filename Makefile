@@ -9,6 +9,9 @@ setup:
 .PHONY: preprocess
 preprocess:
 	python3 config/preprocess/preprocess.py
+
+.PHONY: exportdb
+exportdb:
 	python3 config/preprocess/store_cassandra.py
 
 .PHONY: down 
