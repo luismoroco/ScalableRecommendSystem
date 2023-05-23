@@ -32,4 +32,10 @@ For example in SMALL data:
 ```bash
   sudo make down
 ```
+# SPARK 
 
+1. For use SPARK-MASTER. The files for be executed are in /app
+```bash
+  sudo docker exec -it spark-master bash
+  cd app
+```
