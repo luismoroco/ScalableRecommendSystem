@@ -81,10 +81,10 @@ list_id_for_ban = mov_df_filt['movieId'].tolist()
 rating_df = rating_df[~rating_df['movieId'].isin(list_id_for_ban)]
 print('NEW SIZE RATINGS:', rating_df.shape)
 
-exportSpark(rating_df, 'ratings_filtered')
+exportSpark(rating_df, 'ratings')
 
 # export file
-exportFile(movies_cleaned, 'movies_cleaned')
+exportSpark(movies_cleaned, 'movies')
 print('CLEANED_MOVIES EXPORTED!')
 gc.collect()
 
