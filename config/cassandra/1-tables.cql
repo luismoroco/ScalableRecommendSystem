@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS movies (
   count_rat INT,
   tmdbId TEXT,
   rat_avg FLOAT,
-  genres_ids SET<INT>
+  userIds SET<INT>
 );
 
 CREATE TABLE IF NOT EXISTS users (

@@ -54,8 +54,8 @@ session = cluster.connect()
 session.set_keyspace(str(os.environ['C_DB_NAME']))
 
 for index, row in movies_df.iterrows():
-    idg = {genre_dict.get(gen) for gen in row['genres'].split('|')}
-    session.execute("INSERT INTO movies (id, title, count_rat, tmdbId, rat_avg, genres_ids) VALUES (%s, %s, %s, %s, %s, %s)", (row['movieId'], row['title'], row['rating_count'], str(row['tmdbId']), row['rating_avg'], idg))
+    MovIds = {int(id) for id in row['moviesId'].split(' ')}
+    session.execute("INSERT INTO movies (id, title, count_rat, tmdbId, rat_avg, userIds) VALUES (%s, %s, %s, %s, %s, %s)", (row['movieId'], row['title'], row['rating_count'], str(row['tmdbId']), row['rating_avg'], MovIds))
 gc.collect()
 
 

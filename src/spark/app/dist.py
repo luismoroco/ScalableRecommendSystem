@@ -7,7 +7,7 @@ import os
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder \
-    .appName("VectorSum") \
+    .appName("LSM 1") \
     .master("spark://spark-master:7077") \
     .getOrCreate()
 
