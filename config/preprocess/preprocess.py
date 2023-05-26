@@ -91,7 +91,7 @@ gc.collect()
 
 # FOR USERS AND RATINGS 
 
-"""count_rat = rating_df.groupby('userId').size().reset_index(name='count_rat')
+count_rat = rating_df.groupby('userId').size().reset_index(name='count_rat')
 
 # avg per user
 avg_rat = rating_df.groupby('userId')['rating'].mean().reset_index(name='avg_rat')
@@ -103,4 +103,4 @@ moviesIds = rating_df.groupby('userId')['movieId'].apply(lambda x: ' '.join(x.as
 users_ratings = count_rat.merge(avg_rat, on='userId').merge(moviesIds, on='userId')
 exportFile(users_ratings, 'users_ratings')
 print('USERS_RATING EXPORTED!')
-gc.collect()"""
+gc.collect()
