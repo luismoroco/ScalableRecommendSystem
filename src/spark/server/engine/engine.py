@@ -1,9 +1,8 @@
 import os 
-import math
 from pyspark.ml.recommendation import ALSModel
 
 path = os.path.dirname(os.path.abspath(__file__))
-pathModel = os.path.join(path, '..', '..', 'model')
+pathModel = os.path.join(path, '..', '..', 'app')
 
 MOD_CHARGUE='Error while trying to mount model'
 QUERY_ERROR='Error while trying to make a query'
@@ -13,7 +12,7 @@ class ALSEngineAdapter:
     spark = None
 
     def __init__(self, pathName: str, sparkInstance) -> None:
-        self.model = ALSModel.load(os.path.join(pathName))
+        self.model = ALSModel.load(os.path.join(pathModel, pathName))
         self.spark = sparkInstance
 
         if self.model is not None:
@@ -39,7 +38,7 @@ class ALSEngineAdapter:
     def getNItemsForItem(self, id: int, n: int) -> any:
         try:
             recs = self.model.recommendForItemSubset(self.spark.createDataFrame([(id, )]) \
-                                                     .toDF("itemId"), n)
+                                                     .toDF("movieId"), n)
             return recs
         except:
             raise Exception(QUERY_ERROR)
