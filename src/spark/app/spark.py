@@ -9,6 +9,7 @@ from pyspark.sql.functions import col, lower
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.recommendation import ALS
 
+dir = os.path.dirname(os.path.abspath(__file__))
 
 class AlsRecommender:
 
@@ -134,6 +135,10 @@ class AlsRecommender:
             print('{0}: {1}, with rating '
                   'of {2}'.format(i+1, movie_titles[i], scores[i]))
 
+    def save(self, name: str) -> None:
+        targetDir = os.path.join(dir, '..', 'model')
+        self.model.save(os.path.join(targetDir, name))
+
 
 class Dataset:
     def __init__(self, spark_session, filepath):
@@ -222,7 +227,10 @@ if __name__ == '__main__':
         os.path.join(data_path, movies_filename),
         os.path.join(data_path, ratings_filename))
 
+    recommender.save('ALS')
+
     recommender.set_model_params(10, 0.05, 20)
     recommender.make_recommendations(movie_name, top_n)
+
     # stop
     spark.stop()

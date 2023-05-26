@@ -2,3 +2,4 @@ numpy
 pyspark
 findspark
 python-dotenv
+flask

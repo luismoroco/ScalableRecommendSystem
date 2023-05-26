@@ -1,5 +1,0 @@
-*.md
-*.env
-__pycache__/
-/venv
-*.so

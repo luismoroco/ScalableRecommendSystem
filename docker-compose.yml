@@ -14,9 +14,11 @@ services:
     ports:
       - '${S_EXP_PORT_UI}:8080'
       - '${S_CONN_PORT}:7077'
+      - 5000:5000
     volumes:
       - './src/spark/app:/opt/bitnami/spark/app'
       - './src/spark/data:/opt/bitnami/spark/data'
+      - './src/spark/server:/opt/bitnami/spark/server'
   
   spark-worker-1:
     image: docker.io/spark:venv
