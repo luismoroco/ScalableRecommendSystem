@@ -5,9 +5,50 @@ from pyspark.ml.recommendation import ALSModel
 from pyspark.sql import SparkSession
 from pyspark.ml.evaluation import RegressionEvaluator
 
+from pyspark.ml.recommendation import ALS
+
 path = os.path.dirname(os.path.abspath(__file__))
 
-spark = SparkSession \
+ERR_READ = 'Error while trying to read file'
+
+class ALSRecommender:
+    model = None
+    spark = None
+    maxIter = None
+    rank = None
+    reg = None
+    df = None
+    train = None
+    test = None
+    val = None
+
+    def __init__(self, sc, it, rk, rg) -> None:
+        self.spark = sc
+        self.maxIter = it
+        self.rank = rk
+        self.reg = rg
+
+    def readFiles(self, name: str) -> None:
+        try:
+             self.df = self.spark.read.csv(os.path.join(path, name), inferSchema=True, header=True)
+        except:
+             raise Exception(ERR_READ)
+
+    def partition(self) -> None:
+        self.train, self.test, self.val = self.df.randomSplit([0.6, 0.2, 0.2])
+
+
+    def fit(self) -> None:
+        self.partition()
+        self.model = ALS(userCol='userId', ratingCol='rating', itemCol='movieId')
+        self.model.setMaxIter(self.maxIter).setRank(self.rank).setRegParam(self.reg)
+        self.model = self.model.fit(self.train)
+ 
+    def save(self) -> None:
+        self.model.save(os.path.join(path, 'ALSMODEL_2'))
+
+
+"""spark = SparkSession \
         .builder \
         .master("spark://spark-master:7077") \
         .getOrCreate()
@@ -51,4 +92,4 @@ recomendation = mod.transform(user_1)
 
 recomendation.orderBy('prediction', ascending=False).show()
 
-spark.stop()
+spark.stop()"""

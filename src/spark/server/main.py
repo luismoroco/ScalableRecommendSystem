@@ -1,33 +1,45 @@
-import os
-import argparse
-import time
 import gc
 
-from pyspark.sql import SparkSession, Row
-from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.ml.recommendation import ALS
-
-from flask import Flask
 from engine.engine import ALSEngineAdapter
-
 from spark.spark import SparkInstancer
+
 
 spark_session = SparkInstancer()
 sc = spark_session.getInstance()
 
+
+"""mod = ALSRecommender(sc, 10, 20, 0.05)
+mod.readFiles('ratings.csv')
+mod.fit()
+mod.save()
+"""
+
 QueryEngine = ALSEngineAdapter('ALSMODEL', sc)
 
-"""x = QueryEngine.getRecommForSpecificUser(10, 10)
-x.show()
-"""
-y = QueryEngine.getNItemsForItem(35, 10)
-y.show()
+INT_LEN = 15
 
+def displayData(df) -> None:
+    rdd_df = df.rdd
 
-y.foreach(lambda row: print("Movie ID:", row.movieId, "Recommendations:", row.recommendations))
+    for row in rdd_df.collect():
+        print('UserId', row.userId, 'Recomend', row.recommendations, '\n')
 
+def Menu():
+    entry: int 
+    while True:
+        entry = int(input('Input a User ID \n'))
+        if entry == -1:
+            break
 
-spark_session.shutdown()
+        recs = QueryEngine.getRecommForSpecificUser(entry, INT_LEN)
+        recs.show()
+        displayData(recs)
+        gc.collect()
+
+    spark_session.shutdown()
+
+Menu()
+
 
 """app = Flask(__name__)
 
