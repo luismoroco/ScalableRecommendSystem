@@ -13,21 +13,23 @@ from engine.engine import ALSEngineAdapter
 from spark.spark import SparkInstancer
 
 spark_session = SparkInstancer()
+sc = spark_session.getInstance()
+
+QueryEngine = ALSEngineAdapter('ALSMODEL', sc)
+
+"""x = QueryEngine.getRecommForSpecificUser(10, 10)
+x.show()
+"""
+y = QueryEngine.getNItemsForItem(35, 10)
+y.show()
+
+
+y.foreach(lambda row: print("Movie ID:", row.movieId, "Recommendations:", row.recommendations))
+
 
 spark_session.shutdown()
 
-
-
-
-
-
-
-
-
-
-"""from flask import Flask
-
-app = Flask(__name__)
+"""app = Flask(__name__)
 
 
 @app.route('/')
@@ -36,6 +38,5 @@ def hello_geek():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True)"""
   
-  """
