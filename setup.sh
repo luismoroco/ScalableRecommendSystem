@@ -46,3 +46,5 @@ sudo docker build -f src/spark/Dockerfile -t spark:venv .
 
 mkdir tmp
 chmod 777 ./tmp
+chmod 777 ./src/spark/app
+sudo chmod 777 ./src/spark/data
